@@ -155,7 +155,38 @@ function viewEmployees(){
     })
 }
 
-function updateEmployeeRole() 
+function updateEmployeeRole() {
+    db.query("SELECT * FROM employee join role where employee.role_id = role.id", (err, res) => {
+        if (err){
+            console.log(err)
+        }
+        const employees = res.map(e => e.last_name)
+        console.log(employees)
+        inquirer.prompt([{
+            message: "pick the employee",
+                type: "list",
+                choices: employees,
+                name: "update"
+        },{
+            message: "Enter the role id of the employee",
+                type: "input",
+                name: "updateroleid"
+        }]).then( answer =>{
+            const target = answer.update;
+            const id = answer.updateroleid
+            db.query("Update employee set role_id =? where last_name =?", [id, target], (err, data)=> {console.log(data);
+            
+            viewEmployees()
+        
+            mainMenu()
+        }
+            
+            )
+        }
+
+        )
+    })
+}
 
 
 
